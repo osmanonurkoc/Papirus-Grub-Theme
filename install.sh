@@ -16,7 +16,7 @@ function update_grub_file() {
   echo "GRUB_THEME=/boot/${GRUB_NAME}/themes/Papirus/theme.txt" >> /etc/default/grub
 }
 
-function copy_atomic_files() {
+function copy_papirus_files() {
   echo -e "\e[1m\e[32m==> \e[97mDownloading files...\e[0m"
   git clone https://github.com/osmanonurkoc/Papirus-Grub-Theme /tmp/Papirus-Grub-Theme
   echo -e "\e[1m\e[32m==> \e[97mCopying files...\e[0m"
@@ -39,7 +39,7 @@ function main() {
   else
 	  GRUB_NAME="grub2"
   fi
-  copy_atomic_files
+  copy_papirus_files
 
   echo -e "\e[1m\e[97m  You must set the theme in your GRUB config file,"
   while : ;do
