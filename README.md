@@ -1,6 +1,6 @@
 
 ## Papirus-Grub2-Theme
-Material Grub2 Theme with Papirus Icon Pack
+Material Grub2 Theme with Papirus Icon Pack by Osman Onur Koç
 ![papirus grub theme without loading bar](https://raw.githubusercontent.com/osmanonurkoc/Papirus-Grub-Theme/master/papirus_grub.png)
 ## Installation:
 

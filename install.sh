@@ -5,8 +5,8 @@ GRUB_NAME=""
 function compile_grub() {
   echo -e "\e[1m\e[32m==> \e[97mApplying changes...\e[0m"
   ${GRUB_NAME}-mkconfig -o /boot/${GRUB_NAME}/grub.cfg
-  echo -e "\e[1m\e[34m  -> \e[97mTheme successfuly applied!"
-  echo -e "\e[1m\e[34m  -> \e[97mRestart your PC to check it out."
+  echo -e "\e[1m\e[34m  -> \e[97mTheme successfuly applied! "
+  echo -e "\e[1m\e[34m  -> \e[97m@osmanonurkoc"
   sleep 2
 }
 
