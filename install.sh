@@ -1,104 +1,67 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Grub2 Theme
+GRUB_NAME=""
 
-ROOT_UID=0
-THEME_DIR="/usr/share/grub/themes"
-THEME_NAME=Papirus
-
-MAX_DELAY=20                                        # max delay for user to enter root password
-
-#COLORS
-CDEF=" \033[0m"                                     # default color
-CCIN=" \033[0;36m"                                  # info color
-CGSC=" \033[0;32m"                                  # success color
-CRER=" \033[0;31m"                                  # error color
-CWAR=" \033[0;33m"                                  # waring color
-b_CDEF=" \033[1;37m"                                # bold default color
-b_CCIN=" \033[1;36m"                                # bold info color
-b_CGSC=" \033[1;32m"                                # bold success color
-b_CRER=" \033[1;31m"                                # bold error color
-b_CWAR=" \033[1;33m"                                # bold warning color
-
-# echo like ...  with  flag type  and display message  colors
-prompt () {
-  case ${1} in
-    "-s"|"--success")
-      echo -e "${b_CGSC}${@/-s/}${CDEF}";;          # print success message
-    "-e"|"--error")
-      echo -e "${b_CRER}${@/-e/}${CDEF}";;          # print error message
-    "-w"|"--warning")
-      echo -e "${b_CWAR}${@/-w/}${CDEF}";;          # print warning message
-    "-i"|"--info")
-      echo -e "${b_CCIN}${@/-i/}${CDEF}";;          # print info message
-    *)
-    echo -e "$@"
-    ;;
-  esac
+function compile_grub() {
+  echo -e "\e[1m\e[32m==> \e[97mApplying changes...\e[0m"
+  ${GRUB_NAME}-mkconfig -o /boot/${GRUB_NAME}/grub.cfg
+  echo -e "\e[1m\e[34m  -> \e[97mTheme successfuly applied!"
+  echo -e "\e[1m\e[34m  -> \e[97mRestart your PC to check it out."
+  sleep 2
 }
 
-# Welcome message
-prompt -s "\n\t*************************\n\t* ${THEME_NAME} - Grub2 Theme *\n\t*************************
-   \n\t*************************\n\t*   By Osman Onur KOÇ   *\n\t*************************"
-
-# Check command avalibility
-function has_command() {
-  command -v $1 > /dev/null
+function update_grub_file() {
+  grep -v GRUB_THEME < /etc/default/grub > /tmp/clean_grub
+  mv /tmp/clean_grub /etc/default/grub
+  echo "GRUB_THEME=/boot/${GRUB_NAME}/themes/Papirus/theme.txt" >> /etc/default/grub
 }
 
-prompt -w "\nChecking for root access...\n"
+function copy_atomic_files() {
+  echo -e "\e[1m\e[32m==> \e[97mDownloading files...\e[0m"
+  git clone git clone https://github.com/osmanonurkoc/Papirus-Grub-Theme /tmp/Papirus-Grub-Theme
+  echo -e "\e[1m\e[32m==> \e[97mCopying files...\e[0m"
+  cp -rf /tmp/Papirus-Grub-Theme/Papirus /boot/${GRUB_NAME}/themes/
+}
 
-# Checking for root access and proceed if it is present
-if [ "$UID" -eq "$ROOT_UID" ]; then
+function main() {
 
-  # Create themes directory if not exists
-  prompt -i "\nChecking for the existence of themes directory...\n"
-  [[ -d ${THEME_DIR}/${THEME_NAME} ]] && rm -rf ${THEME_DIR}/${THEME_NAME}
-  mkdir -p "${THEME_DIR}/${THEME_NAME}"
-
-  # Copy theme
-  prompt -i "\nInstalling ${THEME_NAME} theme...\n"
-
-  cp -a ${THEME_NAME}/* ${THEME_DIR}/${THEME_NAME}
-
-  # Set theme
-  prompt -i "\nSetting ${THEME_NAME} as default...\n"
-
-  # Backup grub config
-  cp -an /etc/default/grub /etc/default/grub.bak
-
-  grep "GRUB_THEME=" /etc/default/grub 2>&1 >/dev/null && sed -i '/GRUB_THEME=/d' /etc/default/grub
-
-  echo "GRUB_THEME=\"${THEME_DIR}/${THEME_NAME}/theme.txt\"" >> /etc/default/grub
-
-  # Update grub config
-  echo -e "Updating grub config..."
-  if has_command update-grub; then
-    update-grub
-  elif has_command grub-mkconfig; then
-    grub-mkconfig -o /boot/grub/grub.cfg
-  elif has_command grub2-mkconfig; then
-    if has_command zypper; then
-      grub2-mkconfig -o /boot/grub2/grub.cfg
-    elif has_command dnf; then
-      grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
-    fi
+  # Check user is root
+  if [ $UID == 0 ]; then
+	echo "Yes, You are root!"
+  else
+  	echo "No, You must be root!"
+	exit 1
   fi
 
-  # Success message
-  prompt -s "\n\t          ***************\n\t          *  All done!  *\n\t          ***************\n"
+  # Check which grub
+  if [ -d "/boot/grub" ]; then
+	  GRUB_NAME="grub"
+  else
+	  GRUB_NAME="grub2"
+  fi
+  copy_atomic_files
 
-else
+  echo -e "\e[1m\e[97m  You must set the theme in your GRUB config file,"
+  while : ;do
+    if [ "$answer" = "g" ];then
+      echo -e "\e[1m\e[97m  You didn't give a valid option, try again."
+    else
+      read -p "  Would you like to do it now? [y/n] " -t 10 answer
+      echo -e "\e[0m"
+      if [ "$answer" = "y" ];then
+	# backup old grub file
+	cp /etc/default/grub /tmp/grub$(date '+%m-%d-%y_%H:%M:%S')
+	update_grub_file
+        compile_grub
+	break
+      elif [ "$answer" = "n" ];then
+        break
+      fi
+      let answer=g
+    fi
+  done
 
-  # Error message
-  prompt -e "\n [ Error! ] -> Run me as root "
+}
 
-  # persisted execution of the script as root
-  read -p "[ trusted ] specify the root password : " -t${MAX_DELAY} -s
-  [[ -n "$REPLY" ]] && {
-    sudo -S <<< $REPLY $0
-  } || {
-    prompt  "\n Operation canceled  Bye"
-    exit 1
-  }
-fi
+main "$@"
+exit 0
