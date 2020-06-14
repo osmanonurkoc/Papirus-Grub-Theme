@@ -1,0 +1,46 @@
+# Global properties
+title-text: ""
+desktop-image: "background.png"
+desktop-color: "#000000"
+message-font: "DejaVu Sans Regular 16"
+terminal-font: "DejaVu Sans Regular 16"
+terminal-box: "terminal_box_*.png"
+terminal-left: "0"
+terminal-top: "0"
+terminal-width: "100%"
+terminal-height: "100%"
+terminal-border: "0"
+
+# Boot menu
++ boot_menu {
+  left = 10%
+  top = 10%
+  width = 80%
+  height = 60%
+  item_color = "#ffffff"
+  selected_item_color = "#ffffff"
+  item_height = 40
+  item_spacing = 4
+  item_pixmap_style = "item_*.png"
+  selected_item_pixmap_style = "select_*.png"
+  selected_item_font = "DejaVu Sans Regular 16"
+}
+
+# Countdown message
++ progress_bar {
+  id = "__timeout__"
+  left = 10%
+  width = 80%
+  top = 100%-60
+  height = 31
+  show_text = false
+  text = ""
+  fg_color = "#3daee9"
+  bg_color = "#31363b"
+  border_color = "#31363b"
+  bar_style = "progress_bar_*.png"
+  highlight_style = "progress_highlight_*.png"
+}
+
+
+
