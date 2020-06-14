@@ -1,13 +1,25 @@
+
 ## Papirus-Grub2-Theme
 Material Grub2 Theme with Papirus Icon Pack
 
-**Installation:**
+## Installation:
 
-    git clone https://github.com/osmanonurkoc/Papirus-Grub-Theme && $HOME/Papirus-Grub-Theme/install.sh && cd $HOME && rm -rf "Papirus-Grub-Theme"
+**Installer:**
 
-Just run code in terminal
+Just run this command in your terminal.
 
-**How to config theme:**
+    $ sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/osmanonurkoc/Papirus-Grub-Theme/master/install.sh)"
+
+**Manual:**
+
+ - Clone the repository `git clone https://github.com/osmanonurkoc/Papirus-Grub-Theme.git`
+ - Copy the folder **Papirus/** in the themes folder where GRUB is installed: (/boot/grub/themes)
+ - Edit  **/etc/default/grub**  and place the PAPIRUS theme path with your text file  **theme.txt**
+`GRUB_THEME="/boot/grub/themes/Papirus/theme.txt"`
+ -  Generate your grub configuration file again (sudo update-grub or grub-mkconfig)
+ - That's all
+
+## How to config theme:
 
 Run command `sudo xed /boot/grub/grub.cfg`
 
