@@ -18,7 +18,7 @@ function update_grub_file() {
 
 function copy_atomic_files() {
   echo -e "\e[1m\e[32m==> \e[97mDownloading files...\e[0m"
-  git clone git clone https://github.com/osmanonurkoc/Papirus-Grub-Theme /tmp/Papirus-Grub-Theme
+  git clone https://github.com/osmanonurkoc/Papirus-Grub-Theme /tmp/Papirus-Grub-Theme
   echo -e "\e[1m\e[32m==> \e[97mCopying files...\e[0m"
   cp -rf /tmp/Papirus-Grub-Theme/Papirus /boot/${GRUB_NAME}/themes/
 }
